@@ -1,5 +1,5 @@
 from fastapi import FastAPI, Request, Response, status
-from fastapi.responses import RedirectResponse
+from fastapi.responses import RedirectResponse, JSONResponse
 from fastapi.middleware.cors import CORSMiddleware
 from starlette.middleware.base import BaseHTTPMiddleware
 from collections import defaultdict
@@ -23,7 +23,7 @@ class LoginAttemptMiddleware(BaseHTTPMiddleware):
         # Check if the IP is blocked
         if current_time < self.block_until.get(client_ip, 0):
             message = {"message": "Too many failed login attempts. Please try again later."}
-            return Response(content=message, status_code=429)
+            return JSONResponse(content=message, status_code=429)
 
         # Process the request
         response = await call_next(request)
