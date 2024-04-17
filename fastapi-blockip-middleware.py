@@ -6,6 +6,9 @@ from typing import Dict
 
 import time
 
+app = FastAPI()
+middleware_instance = LoginAttemptMiddleware(app)
+app.add_middleware(LoginAttemptMiddleware, app=app)
 
 class LoginAttemptMiddleware(BaseHTTPMiddleware):
     def __init__(self, app):
@@ -51,3 +54,18 @@ class LoginAttemptMiddleware(BaseHTTPMiddleware):
                 self.failed_attempts[client_ip] = 0
 
         return response
+
+
+@app.delete("/unblock-ip/{ip_address}")
+async def unblock_ip(ip_address: str):
+    """Endpoint to unblock a specific IP address."""
+    # Remove the IP address from the block_until dictionary
+    if ip_address in middleware_instance.block_until:
+        del middleware_instance.block_until[ip_address]
+        # Reset the failed attempts counter for this IP address
+        if ip_address in middleware_instance.failed_attempts:
+            del middleware_instance.failed_attempts[ip_address]
+        return {"message": f"IP address {ip_address} has been unblocked."}
+    else:
+        raise HTTPException(status_code=404, detail="IP address not found in blocked list.")
+
