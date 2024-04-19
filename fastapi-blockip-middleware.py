@@ -52,7 +52,9 @@ class LoginAttemptMiddleware(BaseHTTPMiddleware):
                 self.block_until[client_ip] = current_time + 10  # Block for 10 minutes
                 # Reset the failed attempts counter
                 self.failed_attempts[client_ip] = 0
-
+                
+        self.failed_attempts[client_ip] = 0
+        
         return response
 
 
