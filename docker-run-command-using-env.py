@@ -5,6 +5,7 @@ def parse_env_file(file_path):
             line = line.strip()
             if line and not line.startswith('#') and '=' in line:
                 key, value = line.split('=', 1)
+                value = value.strip('"')
                 env_vars[key.strip()] = value.strip()
     return env_vars
 
@@ -15,7 +16,6 @@ def generate_docker_run_command(image_name, env_file, container_name):
     return command
 
 if __name__ == "__main__":
-    # Replace these with your actual image name, container name, and .env file path
     docker_image_name = input("Enter your docker image name: ")
     container_name = input("Enter you docker container name: ")
     env_file_path = input("Enter the path for .env file: ")
