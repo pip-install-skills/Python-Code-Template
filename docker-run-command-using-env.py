@@ -11,7 +11,7 @@ def parse_env_file(file_path):
 
 def generate_docker_run_command(image_name, env_file, container_name):
     env_vars = parse_env_file(env_file)
-    env_flags = ' '.join([f'-e {key}="{value}"' for key, value in env_vars.items()])
+    env_flags = " ".join([f"-e {key}='{value}'" for key, value in env_vars.items()])
     command = f'docker run --name {container_name} {env_flags} {image_name}'
     return command
 
